@@ -119,8 +119,8 @@ Option 1 → Web scanner runs
 Option 2 → Port scanner runs
 
 and so on…
-
-
+output
+<img width="575" height="247" alt="Image" src="https://github.com/user-attachments/assets/c75a2c96-b421-437c-8282-21b47f5c4814" />
 
 
 
