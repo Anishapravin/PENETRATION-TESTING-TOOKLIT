@@ -14,51 +14,131 @@ MENTOR: NEELA SANTHOSH
 DESCRIPTION
 # Penetration Testing Toolkit (Simple Description)
 
-This toolkit is a basic set of Python tools used for ethical hacking and cybersecurity testing. 
-It helps you find common vulnerabilities in web applications and networks.
+ SECTION: Project Name and Purpose
+ This tells what the project is and why it’s useful:
 
-## 📦 Files in This Project:
+It’s a toolkit built using Python.
 
-1. penetration_toolkit.py
-   - Main menu to run different tools
-   - You choose what scan you want to perform
+It helps in ethical hacking.
 
-2. web_scanner.py
-   - Checks for:
-     • XSS (Cross Site Scripting)
-     • SQL Injection
-     • Exposed admin pages like /admin or /login
+It finds vulnerabilities in websites and networks.
 
-3. port_scanner.py
-   - Scans a target IP or domain for open ports (like port 80 for HTTP)
+SECTION: Files Explained
+Here, we explain what each Python file does:
 
-4. subdomain_finder.py
-   - Finds hidden subdomains like admin.example.com or mail.example.com
+ 1. penetration_toolkit.py
+It’s the main menu.
 
-5. login_bruteforce.py
-   - Tries common passwords on a login form to find weak logins
+When you run it, you’ll see options like:
 
-## 🛠️ How to Run the Toolkit
 
-1. Make sure Python is installed.
-2. Install required packages:
-   pip install requests beautifulsoup4
+1. Web Vulnerability Scanner
+2. Port Scanner
+3. Subdomain Finder
+4. Login Bruteforce
+You select a number and the related scanner runs.
 
-3. Run the main file:
-   python penetration_toolkit.py
+ 2. web_scanner.py
+Checks if a website is vulnerable to:
 
-## ⚠️ Important Notes:
+XSS (Cross-Site Scripting) – used to inject malicious scripts
 
-- Only use this toolkit on websites and systems you own or have permission to test.
-- This is for educational and ethical hacking purposes only.
+SQL Injection – used to bypass login or get data from database
 
-## ✅ Example Usage
+Exposed Admin Pages – checks if URLs like /admin or /login are publicly accessible
 
-If you choose:
-- Option 1 → Scans a website for XSS, SQLi, admin panels
-- Option 2 → Scans ports on a target IP
-- Option 3 → Finds hidden subdomains
-- Option 4 → Tries to crack a login form
+ 3. port_scanner.py
+Scans a server (IP or domain) to find open ports
+
+Example: It may detect port 80 (used for websites) or port 22 (used for SSH)
+
+ 4. subdomain_finder.py
+Tries to find hidden subdomains like:
+
+admin.example.com
+
+mail.example.com
+
+These can sometimes reveal admin panels or email servers.
+ 5. login_bruteforce.py
+Tries to guess a password for a login form.
+
+Uses a small list of common passwords like:
+
+admin
+
+123456
+
+password
+
+letmein
+
+SECTION: How to Run the Toolkit
+
+##  How to Run the Toolkit
+This part shows you how to set up and run the tool.
+
+Steps:
+
+Make sure Python is installed.
+
+Install required libraries:
+
+
+pip install requests beautifulsoup4
+Run the toolkit:
+
+nginx
+python penetration_toolkit.py
+It opens the menu, and you can pick the scanner you want.
+
+ SECTION: Safety Warning
+
+##  Important Notes:
+ This reminds you:
+
+Only test your own systems or websites.
+
+Unauthorized scanning can be illegal.
+
+The toolkit is for learning and ethical use only.
+
+ SECTION: Example Use
+shell
+Copy
+Edit
+##  Example Usage
+This helps users understand:
+
+What happens when they choose each menu option.
+
+For example:
+
+Option 1 → Web scanner runs
+
+Option 2 → Port scanner runs
+
+and so on…
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ---
 
