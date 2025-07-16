@@ -1,0 +1,173 @@
+# === penetration_toolkit.py ===
+# Main Menu System for Penetration Testing Toolkit
+
+from web_scanner import run_web_scanner
+from port_scanner import run_port_scanner
+from subdomain_finder import run_subdomain_scan
+from login_bruteforce import run_bruteforce
+
+def main():
+    while True:
+        print("\n--- Penetration Testing Toolkit ---")
+        print("1. Web Vulnerability Scanner")
+        print("2. Port Scanner")
+        print("3. Subdomain Finder")
+        print("4. Login Bruteforce")
+        print("5. Exit")
+        
+        choice = input("Select an option: ")
+        
+        if choice == '1':
+            run_web_scanner()
+        elif choice == '2':
+            run_port_scanner()
+        elif choice == '3':
+            run_subdomain_scan()
+        elif choice == '4':
+            run_bruteforce()
+        elif choice == '5':
+            break
+        else:
+            print("Invalid choice")
+
+if __name__ == "__main__":
+    main()
+
+
+# === web_scanner.py ===
+# Web Vulnerability Scanner
+
+def run_web_scanner():
+    import requests
+    from bs4 import BeautifulSoup
+    from urllib.parse import urljoin
+
+    xss_payload = "<script>alert('XSS')</script>"
+    sql_payload = "' OR '1'='1"
+
+    def get_forms(url):
+        soup = BeautifulSoup(requests.get(url).content, "html.parser")
+        return soup.find_all("form")
+
+    def get_form_details(form):
+        details = {}
+        action = form.attrs.get("action")
+        method = form.attrs.get("method", "get").lower()
+        inputs = []
+        for input_tag in form.find_all("input"):
+            input_type = input_tag.attrs.get("type", "text")
+            input_name = input_tag.attrs.get("name")
+            inputs.append({"type": input_type, "name": input_name})
+        details["action"] = action
+        details["method"] = method
+        details["inputs"] = inputs
+        return details
+
+    def submit_form(form_details, url, payload):
+        target_url = urljoin(url, form_details["action"])
+        data = {}
+        for input in form_details["inputs"]:
+            if input["type"] == "text" or input["type"] == "search":
+                data[input["name"]] = payload
+        if form_details["method"] == "post":
+            return requests.post(target_url, data=data)
+        else:
+            return requests.get(target_url, params=data)
+
+    def scan_xss(url):
+        print("[*] Scanning for XSS...")
+        forms = get_forms(url)
+        for form in forms:
+            details = get_form_details(form)
+            res = submit_form(details, url, xss_payload)
+            if xss_payload in res.text:
+                print(f"[!] XSS vulnerability detected in form at {url}")
+                return
+        print("[+] No XSS vulnerability found.")
+
+    def scan_sql_injection(url):
+        print("[*] Scanning for SQL Injection...")
+        for payload in ["'", sql_payload, "\""]:
+            new_url = f"{url}?id={payload}"
+            res = requests.get(new_url)
+            errors = ["you have an error in your sql syntax", "warning", "mysql", "sql"]
+            for error in errors:
+                if error in res.text.lower():
+                    print(f"[!] Possible SQL Injection vulnerability at: {new_url}")
+                    return
+        print("[+] No SQL Injection vulnerability found.")
+
+    def check_admin_pages(url):
+        print("[*] Checking for exposed admin pages...")
+        admin_paths = ["/admin", "/login", "/administrator", "/admin.php"]
+        for path in admin_paths:
+            full_url = urljoin(url, path)
+            res = requests.get(full_url)
+            if res.status_code == 200:
+                print(f"[!] Exposed admin page found: {full_url}")
+        print("[+] Admin page check complete.")
+
+    url = input("Enter URL to scan: ")
+    scan_xss(url)
+    scan_sql_injection(url)
+    check_admin_pages(url)
+
+
+# === port_scanner.py ===
+# Port Scanner
+
+def run_port_scanner():
+    import socket
+
+    def scan(target, ports):
+        print(f"Scanning {target} for open ports...")
+        for port in ports:
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            s.settimeout(0.5)
+            try:
+                s.connect((target, port))
+                print(f"[+] Port {port} is open")
+            except:
+                pass
+            s.close()
+
+    target = input("Enter IP or domain: ")
+    ports = range(20, 1025)
+    scan(target, ports)
+
+
+# === subdomain_finder.py ===
+# Subdomain Brute Forcer
+
+def run_subdomain_scan():
+    import requests
+
+    domain = input("Enter domain (e.g. example.com): ")
+    subdomains = ["www", "mail", "ftp", "admin"]
+
+    for sub in subdomains:
+        url = f"http://{sub}.{domain}"
+        try:
+            res = requests.get(url)
+            print(f"[+] Found: {url}")
+        except:
+            pass
+
+
+# === login_bruteforce.py ===
+# Login Form Bruteforce
+
+def run_bruteforce():
+    import requests
+
+    url = input("Enter login URL: ")
+    user = input("Enter username: ")
+    passwords = ["admin", "123456", "password", "letmein"]
+
+    for pwd in passwords:
+        data = {"username": user, "password": pwd}
+        res = requests.post(url, data=data)
+        if "invalid" not in res.text.lower():
+            print(f"[+] Password Found: {pwd}")
+            return
+    print("[-] Password not found in wordlist")
