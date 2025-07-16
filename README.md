@@ -12,7 +12,7 @@ DURATION: 4 WEEKS
 MENTOR: NEELA SANTHOSH
 
 DESCRIPTION
-# Penetration Testing Toolkit (Simple Description)
+# Penetration Testing Toolkit 
 
  SECTION: Project Name and Purpose
  This tells what the project is and why it’s useful:
